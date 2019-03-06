@@ -1,147 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Startup Name Generator',
-      home: RandomWords(),
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-    );
-  }
-}
-
-class RandomWords extends StatefulWidget {
-  @override
-  createState() => RandomWordsState();
-}
-
-class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _bigFront = TextStyle(fontSize: 18.0);
-  final _saved = Set<WordPair>();
-
-  Widget _buildRow(WordPair pair) {
-    final alreadySaved = _saved.contains(pair);
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        textAlign: TextAlign.start,
-        style:TextStyle(
-          decoration: TextDecoration.underline,
-          decorationStyle: TextDecorationStyle.dashed,
-          fontSize: 18.0,
-          color: Colors.red,
-        ),
-      ),
-      trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
-    );
-  }
-
-  Widget _buildSuggestion() {
-    return ListView.builder(
-      padding: EdgeInsets.all(16.0),
-      itemBuilder: (context, i) {
-        if (i.isOdd) return Divider();
-        final index = i ~/ 2;
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10));
-        }
-        return _buildRow(_suggestions[index]);
-      },
-    );
-  }
-
-
-  void _pushSaved() {
-    Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) {
-              final tiles = _saved.map(
-                  (pair){
-                    return ListTile(
-                      title: new Text(
-                          pair.asPascalCase,
-                          style: _bigFront,
-                      ),
-                    );
-                  },
-              );
-              final divided = ListTile
-                .divideTiles(
-                  context: context,
-                  tiles: tiles,
-                  )
-              .toList();
-              return Scaffold(
-                appBar: AppBar(
-                  title: Text("Saved Suggestions"),
+    Widget title = Container(
+      padding: EdgeInsets.all(32.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(bottom: 12.0),
+                  child: Text(
+                    "Oeschinen Lake Campground",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                body: ListView(children: divided),
-              );
-            },
-        ),
-    );
-  }
-
-//  @override
-//  Widget build(BuildContext context) {
-//    return new Scaffold(
-//      appBar: new AppBar(
-//        title: new Text('Startup Name Generator'),
-//        actions: <Widget>[
-//          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved),
-//        ],
-//      ),
-//      body: _buildSuggestion(),
-//    );
-//  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Startup Name Generator'),
-
-      ),
-      body: Center(
-        child: Container(
-          child: Text("Hello New", style: TextStyle(fontSize: 24.0, color:Colors.black),),
-          alignment: Alignment.topLeft,
-          width: 500,
-          height: 300,
-//          color: Colors.blue,
-          padding: EdgeInsets.all(10.0),
-          margin: EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: Colors.red,
-                width: 10.0,
-                style: BorderStyle.solid,
-            ),
-            gradient: LinearGradient(
-              colors: [Colors.red,Colors.grey, Colors.blue],
+                Text(
+                  "Kandersteg, Switzerland",
+                    style: TextStyle(color: Colors.grey),
+                ),
+              ],
             ),
           ),
+          Icon(
+            Icons.star,
+            color: Colors.red,
+          ),
+          Container(
+            padding: EdgeInsets.all(5.0),
+            child: Text("41"),
+          ),
+        ],
+      ),
+    );
+    Widget button = Container(
+      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          item(Icons.call, "CALL"),
+          item(Icons.near_me, "ROUTER"),
+          item(Icons.share, "SHARE"),
+        ],
+      ),
+    );
+    Widget text = Container(
+        padding: EdgeInsets.only(left: 32.0, right: 32.0),
+        child:Text(
+          '''Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese Alps. Situated 1,578 meters above sea level, it is one of the larger Alpine Lakes.A gondola ride from Kandersteg, followed by a half-hour walk through pastures and pine forest, leads you to the lake, which warms to 20 degrees Celsius in the summer. Activities enjoyed here include rowing, and riding the summer toboggan run.''',
+        ),
+    );
+    return MaterialApp(
+      title: "demo",
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Demo"),
+        ),
+        body: ListView(
+          children: [
+            Image.asset(
+              'images/photo.jpeg',
+              fit: BoxFit.cover,
+            ),
+            title,
+            button,
+            text,
+          ],
         ),
       ),
+    );
+  }
+
+  Widget item(IconData icon, String data) {
+    Color color = Colors.blue;
+    return Column(
+
+      children: [
+        Icon(
+          icon,
+          color: color,
+        ),
+        Text(
+          data,
+          style: TextStyle(color: color),
+        ),
+      ],
     );
   }
 }
